@@ -5,6 +5,7 @@ namespace CodeAgenda\Http\Controllers;
 use CodeAgenda\Entities\Pessoa;
 use CodeAgenda\Entities\Telefone;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class AgendaController extends Controller
 {
@@ -18,9 +19,33 @@ class AgendaController extends Controller
 
 
         $pessoas = Pessoa::where('apelido', 'like', $letra.'%')->get()->sortBy('apelido');
-        $relacao = $this->getLetras();
-        return view('agenda', compact('pessoas','relacao'));
 
+        return view('agenda.agenda', compact('pessoas'));
+
+    }
+
+    public function createContato() {
+
+        $errors = [];
+        return view('pessoa.create', compact('errors' ));
+    }
+
+    public function storeContato( Request $request) {
+
+        $validator = Validator::make($request->all(), [
+           'name' => 'required|min:3|max:255|unique:pessoas',
+           'apelido' => 'required|min:2|max:50',
+           'sexo' => 'required'
+        ]);
+
+        $errors = $validator->messages();
+
+        if ($validator->fails()) {
+            return view('pessoa.create',compact('errors') );
+        }
+
+        Pessoa::create($request->all());
+        return redirect()->route('agenda.index');
     }
 
     public function busca( Request $request ) {
@@ -31,61 +56,30 @@ class AgendaController extends Controller
         } else {
             $pessoas = Pessoa::where('apelido', 'like', '%'.$string.'%' )->orWhere('name', 'like', '%'.$string.'%' )->get()->sortBy('apelido');
         }
-        $relacao = $this->getLetras();
-        return view('agenda', compact('pessoas','relacao'));
+        return view('agenda.agenda', compact('pessoas'));
 
     }
 
-    protected function getLetras(){
 
-        $registros = [];
 
-        foreach( Pessoa::all() as $pessoa ) {
-            $registros[] = strtoupper(substr($pessoa->apelido,0,1));
-        }
-        sort( $registros);
+    public function deletePessoa( $id ){
+        $pessoa = Pessoa::find($id );
+        return view('pessoa.delete', compact('pessoa'));
+    }
 
-        return  array_unique( $registros );
-
+    public function deleteFone( $id ){
+        $telefone = Telefone::find($id );
+        $pessoa = $telefone->pessoa;
+        return view('telefone.delete', compact('telefone','pessoa'));
     }
 
     public function destroyPessoa( $id ){
-        $pessoa = Pessoa::find($id );
-        $fones = $pessoa->telefone ;
-
-        if ( count( $pessoa ) == 0  ) {
-            return [
-                'error' => true,
-                'message' => 'Não encontrado'
-            ];
-        } else {
-
-
-            if ( count( $fones ) > 0 ) {
-                return [
-                    'error' => true,
-                    'message' => 'Tem Numero Cadastrado, não e possivel excluir'
-                ];
-            } else {
-                Pessoa::destroy( $id );
-                return redirect( route('agenda.index'));
-            }
-        }
-
+        Pessoa::destroy( $id );
+        return redirect( route('agenda.index'));
     }
 
     public function destroyFone( $id ){
-        $fones = Telefone::find($id ) ;
-
-        if ( count($fones ) == 0  ) {
-            return [
-                'error' => true,
-                'message' => 'Não encontrado'
-            ];
-        } else {
-            Telefone::destroy( $id );
-            return redirect( route('agenda.index'));
-
-        }
+        Telefone::destroy( $id );
+        return redirect( route('agenda.index'));
     }
 }

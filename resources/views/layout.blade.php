@@ -8,7 +8,7 @@
     <title>Code Agenda</title>
 
     <!-- Bootstrap -->
-    <link href="css/app.css" rel="stylesheet">
+    <link href="{{ url('css/app.css') }}" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -45,14 +45,14 @@
     <div class="row">
         <div class="col-lg-12">
 
-            @foreach( $relacao as  $letra )
+            @foreach( $letras as  $letra )
                 <a href="{{ route('agenda.letra', ['letra' => $letra ]) }}" class="btn btn-primary btn-xs">{{ $letra }}</a>
             @endforeach
         </div>
     </div>
     <div class="row">
         <div class="col-lg-12 btn-row">
-            <a href="#" class="btn btn-primary">Novo Contato</a>
+            <a href="{{ route('agenda.createContato') }}" class="btn btn-primary">Novo Contato</a>
         </div>
     </div>
     <div class="row">

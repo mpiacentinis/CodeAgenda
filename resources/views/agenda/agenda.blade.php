@@ -3,7 +3,7 @@
 @section('content')
     @foreach( $pessoas as $pessoa )
         <div class="col-md-6">
-            @include('agenda.contato')
+            @include('partials.contato')
         </div>
     @endforeach
 @endsection

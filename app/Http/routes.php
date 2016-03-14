@@ -15,8 +15,14 @@
     return $app->version();
 });*/
 
-$app->get('/',                      ['as' => 'agenda.index',        'uses' => 'AgendaController@index']);
-$app->get('/{letra}',               ['as' => 'agenda.letra',        'uses' => 'AgendaController@index']);
-$app->post('/busca',                ['as' => 'agenda.busca',        'uses' => 'AgendaController@busca']);
-$app->get('/{id}/destroyPessoa',    ['as' => 'agenda.destroyPessoa','uses' => 'AgendaController@destroyPessoa']);
-$app->get('/{id}/destroyFone',      ['as' => 'agenda.destroyFone',  'uses' => 'AgendaController@destroyFone']);
+$app->get('/',                              ['as' => 'agenda.index',        'uses' => 'AgendaController@index']);
+$app->get('/createContato',                 ['as' => 'agenda.createContato','uses' => 'AgendaController@createContato']);
+$app->post('/Contato',                      ['as' => 'agenda.contato',      'uses' => 'AgendaController@storeContato']);
+$app->get('/{letra}',                       ['as' => 'agenda.letra',        'uses' => 'AgendaController@index']);
+$app->post('/busca',                        ['as' => 'agenda.busca',        'uses' => 'AgendaController@busca']);
+
+$app->get('/{id}/deletePessoa',             ['as' => 'agenda.deletePessoa','uses' => 'AgendaController@deletePessoa']);
+$app->get('/{id}/deleteFone',               ['as' => 'agenda.deleteFone',  'uses' => 'AgendaController@deleteFone']);
+
+$app->delete('/{id}/destroyPessoa',        ['as' => 'agenda.destroyPessoa','uses' => 'AgendaController@destroyPessoa']);
+$app->delete('/{id}/destroyFone',          ['as' => 'agenda.destroyFone',  'uses' => 'AgendaController@destroyFone']);

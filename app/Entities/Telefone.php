@@ -27,7 +27,7 @@ class Telefone extends  Model
         return "$this->codipais ( $this->ddd )  $this->prefixo  -   $this->sufixo ";
     }
 
-    public function pessoas(){
+    public function pessoa(){
         return $this->belongsTo(Pessoa::class);
     }
 
